@@ -8,7 +8,11 @@ Brief explanation of the problem:
 
 ## Architecture
 
-[Architecture Diagram]
+## Architecture
+
+The following diagram illustrates the production architecture, deployment workflow, and infrastructure components of the platform.
+
+![Infrastructure Automation Platform Architecture](diagram-export-7-16-2026-5_42_25-PM.png)
 
 Description of:
 - RHEL application environment
