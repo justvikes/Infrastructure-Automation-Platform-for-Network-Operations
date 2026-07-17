@@ -24,9 +24,9 @@ Description of:
 
 The application delivery process was automated using Jenkins pipelines with integrated security validation and controlled production releases.
 
+![Infrastructure Automation Platform CI/CD Workflow](diagram-export-7-16-2026-7_48_17-PM.png)
 
-
-Description:
+Description of:
 - Git webhook triggers Jenkins pipeline
 - Jenkins performs build and validation steps
 - Snyk performs vulnerability scanning and security checks
