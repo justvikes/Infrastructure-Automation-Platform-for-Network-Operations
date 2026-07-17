@@ -8,8 +8,6 @@ Brief explanation of the problem:
 
 ## Architecture
 
-## Architecture
-
 The following diagram illustrates the production architecture, deployment workflow, and infrastructure components of the platform.
 
 ![Infrastructure Automation Platform Architecture](diagram-export-7-16-2026-5_42_25-PM.png)
@@ -21,6 +19,26 @@ Description of:
 - Terraform-managed AWS infrastructure
 - PostgreSQL database
 - Webex notifications
+
+## CI/CD Workflow
+
+The application delivery process was automated using Jenkins pipelines with integrated security validation and controlled production releases.
+
+
+
+Description:
+- Git webhook triggers Jenkins pipeline
+- Jenkins performs build and validation steps
+- Snyk performs vulnerability scanning and security checks
+- Manual approval gate before production deployment
+- Jenkins deploys updates to RHEL and EKS environments
+
+Pipeline stages:
+- Source checkout
+- Build and validation
+- Security scanning with Snyk
+- Approval gate
+- Production deployment
 
 ## Problem
 
