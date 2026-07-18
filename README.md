@@ -1,132 +1,382 @@
-# Infrastructure Automation Platform
+# Infrastructure Operations Automation Platform
 
-## Overview
-Brief explanation of the problem:
-- Manual infrastructure monitoring
-- Slow incident communication
-- Operational overhead during outages
+> A Python Flask-based infrastructure operations platform that automated incident communication, standardized operational workflows, and streamlined infrastructure management across a hybrid on-premises and AWS production environment.
 
-## Architecture
+---
 
-The following diagram illustrates the production architecture, deployment workflow, and infrastructure components of the platform.
+# Key Highlights
 
-![Infrastructure Automation Platform Architecture](diagram-export-7-16-2026-5_42_25-PM.png)
+* Python Flask internal operations automation platform
+* Hybrid active-active deployment across Red Hat Enterprise Linux and Amazon EKS
+* Corporate F5 BIG-IP load balancing between on-premises and AWS environments
+* Jenkins CI/CD with integrated Snyk vulnerability scanning
+* Terraform-managed AWS infrastructure
+* PostgreSQL-backed metadata management and operational reporting
+* Cisco Webex API integration for standardized incident communication
+* Automated form auto-population using infrastructure metadata
+* Historical notification reporting and auditing
+* Reduced manual operational effort through workflow automation
 
-Description of:
-- RHEL application environment
-- Amazon EKS deployment
-- Jenkins CI/CD pipeline
-- Terraform-managed AWS infrastructure
-- PostgreSQL database
-- Webex notifications
+---
 
-## CI/CD Workflow
+# Overview
 
-The application delivery process was automated using Jenkins pipelines with integrated security validation and controlled production releases.
+Modern network operations require rapid communication and consistent processes during infrastructure incidents. Manual notification workflows often lead to inconsistent messaging, repetitive data entry, and delayed communication during critical outages.
 
-![Infrastructure Automation Platform CI/CD Workflow](diagram-export-7-16-2026-7_48_17-PM.png)
+To address these challenges, I developed an internal Infrastructure Operations Automation Platform using Python Flask. The platform centralized operational workflows by combining automated notification generation, infrastructure metadata management, historical reporting, and Cisco Webex integration into a single web application.
 
-Description of:
-- Git webhook triggers Jenkins pipeline
-- Jenkins performs build and validation steps
-- Snyk performs vulnerability scanning and security checks
-- Manual approval gate before production deployment
-- Jenkins deploys updates to RHEL and EKS environments
+The application was deployed using a hybrid architecture spanning traditional Red Hat Enterprise Linux servers and Amazon Elastic Kubernetes Service (EKS), allowing the organization to modernize its infrastructure while continuing to support existing production environments.
 
-Pipeline stages:
-- Source checkout
-- Build and validation
-- Security scanning with Snyk
-- Approval gate
-- Production deployment
+---
 
-## Problem
+# Problem
 
-During network outages, operations teams needed better visibility into infrastructure impact and remaining capacity.
+During production network outages, operations engineers needed a faster and more standardized way to communicate infrastructure events.
 
-Example:
-- Multiple datacenter circuits experienced failures
-- Remaining circuit utilization became critical
-- Manual status updates slowed response
+Challenges included:
 
-## Solution
+* Manual notification creation
+* Repetitive entry of static circuit information
+* Slow communication during outages
+* Inconsistent notification formatting
+* Limited historical reporting
+* Operational overhead during high-impact incidents
 
-Built a Python Flask automation platform that:
-- Collected infrastructure information
-- Automated operational workflows
-- Delivered real-time notifications through Cisco Webex
-- Improved visibility during incidents
+One example involved multiple datacenter circuit failures where engineers needed continuous visibility into remaining circuit utilization while coordinating incident response across multiple teams.
 
-## Deployment Architecture
+---
 
-### Application Layer
-- Python Flask
-- Apache/mod_wsgi
-- Kubernetes/EKS
+# Solution
 
-### CI/CD
-- Jenkins
-- Automated deployments
+The platform automated multiple operational workflows through a centralized web application.
 
-### Infrastructure
-- AWS
-- Terraform
-- Infrastructure as Code
+Core capabilities included:
 
-## Design Decisions
+* Automated incident notification generation
+* Circuit metadata management
+* Database-driven form auto-population
+* Cisco Webex notification integration
+* Historical notification reporting
+* Standardized operational communication
+* Hybrid production deployment
+* CI/CD automation with integrated security validation
 
-### Why Terraform?
-Terraform was used to manage AWS infrastructure through Infrastructure as Code (IaC), allowing infrastructure changes to be defined, reviewed, and deployed consistently across environments.
+---
 
-Instead of manually creating and configuring AWS resources, Terraform provided a repeatable approach for provisioning and maintaining infrastructure. This improved reliability by reducing configuration drift, enabled version control of infrastructure changes, and made it easier to reproduce environments when updates or new deployments were required.
+# User Workflows
 
-Terraform also provided better visibility into infrastructure changes through its plan/apply workflow, allowing changes to be reviewed before being introduced into production.
+The platform supported multiple workflows depending on the engineer's operational task.
 
-Key points:
+---
 
-- Infrastructure defined as code and stored in version control
-- Reduced manual AWS configuration
-- Improved consistency across environments
-- Minimized configuration drift
-- Enabled repeatable infrastructure deployments
+## Create Notification Workflow
 
-### Why Kubernetes/EKS?
-Amazon EKS was used to provide a scalable and standardized platform for running containerized versions of the Flask application. Kubernetes provided automated scheduling, service management, and workload orchestration, allowing the application to run reliably across multiple nodes.
+![Create Notification Workflow](images/create-notification-workflow.png)
 
-Moving workloads into Kubernetes improved deployment consistency by packaging the application and its dependencies into containers. This reduced environment differences between development and production and enabled more predictable deployments.
+### Workflow
 
-EKS also provided capabilities such as automated pod management, scaling, health checks, and service discovery, allowing the application platform to better support production workloads.
+1. Engineer accesses the internal Operations Portal.
+2. Engineer selects **Create Notification**.
+3. Circuit ID is entered.
+4. Flask queries PostgreSQL for circuit metadata.
+5. Static fields are automatically populated.
+6. Engineer enters incident-specific information.
+7. Flask validates the request.
+8. Notification is stored in PostgreSQL.
+9. Cisco Webex API sends a standardized notification.
 
-Key points:
+---
 
-- Standardized application deployment through containers
-- Automated workload scheduling and management
-- Improved scalability and availability
-- Simplified application lifecycle management
-- Reduced "works on my machine" issues
+## Edit / Reply Notification Workflow
 
-### Why Hybrid Deployment?
-The hybrid deployment approach allowed the platform to support existing production environments while adopting cloud-native technologies incrementally.
+![Edit Reply Workflow](images/edit-reply-workflow.png)
 
-The RHEL Apache/mod_wsgi deployment provided a stable environment for existing application workloads, while the EKS deployment introduced Kubernetes-based orchestration, containerization, and modern deployment practices.
+### Workflow
 
-Maintaining both environments allowed the organization to continue supporting production operations while gradually adopting cloud-native infrastructure patterns. This approach reduced migration risk, enabled flexibility, and allowed teams to leverage existing infrastructure investments while moving toward more scalable deployment models.
+The platform also supported ongoing incident communication.
 
-Key points:
+Engineers could:
 
-- Supported existing production workloads
-- Enabled gradual cloud-native adoption
-- Reduced migration risk
-- Allowed comparison between traditional and Kubernetes deployments
-- Provided flexibility for future modernization
+* Retrieve existing notifications
+* Edit notification details
+* Reply with operational updates
+* Maintain communication throughout an incident
 
-## Results
+Updated notification history was stored in PostgreSQL while Webex messages were updated through the Cisco Webex API.
 
-- Reduced manual operational effort
-- Improved incident communication
-- Standardized deployment workflows
-- Increased visibility during infrastructure events
+---
 
-## Technologies
+## Circuit Metadata Management Workflow
 
-Python | Flask | AWS | EKS | Kubernetes | Terraform | Jenkins | RHEL | PostgreSQL
+![Circuit Metadata Workflow](images/circuit-metadata-workflow.png)
+
+### Workflow
+
+To reduce repetitive manual data entry, the application included a dedicated metadata management interface implemented as a separate administrative section of the web application.
+
+Authorized users could perform full CRUD operations on circuit metadata including:
+
+* Create circuit records
+* View existing metadata
+* Update inaccurate information
+* Remove obsolete records
+
+Maintaining accurate metadata ensured notification forms remained automatically populated with reliable infrastructure information.
+
+---
+
+# Runtime Architecture
+
+![Runtime Architecture](images/runtime-architecture.png)
+
+The production environment utilized a hybrid active-active deployment architecture.
+
+## User Access Layer
+
+* Network / Operations Engineers
+* Internal corporate URL
+* Corporate F5 BIG-IP Load Balancer
+
+The F5 load balancer distributed production traffic across both on-premises and AWS-hosted application environments.
+
+---
+
+## Application Hosting Layer
+
+### On-Premises Environment
+
+* Red Hat Enterprise Linux
+* Apache Web Server
+* mod_wsgi
+* Python Flask Application
+
+### AWS Environment
+
+* Amazon Elastic Kubernetes Service (EKS)
+* Kubernetes
+* Flask Application Pods
+* Kubernetes Services
+
+Both environments actively served production traffic.
+
+---
+
+## Application Layer
+
+Python Flask provided:
+
+* Notification automation
+* Business logic
+* Input validation
+* Database interactions
+* Cisco Webex integration
+* Metadata management
+
+---
+
+## Data Layer
+
+Shared PostgreSQL Database
+
+Logical tables:
+
+### Circuit Metadata
+
+Reference data used for form auto-population.
+
+Stored:
+
+* Circuit ID
+* Circuit Bandwidth
+* Device Name
+* ISP Port
+* Circuit Provider
+
+---
+
+### Notification History
+
+Operational transaction records including:
+
+* Timestamp
+* Circuit ID
+* Incident Details
+* Notification Status
+
+Used for:
+
+* Reporting
+* Auditing
+* Historical analysis
+
+---
+
+## External Integrations
+
+Cisco Webex API
+
+Used for:
+
+* Create notifications
+* Update notifications
+* Reply to existing communication threads
+
+---
+
+# Delivery Architecture
+
+![Delivery Architecture](images/delivery-architecture.png)
+
+Application delivery followed a controlled DevSecOps workflow.
+
+## Development Deployments
+
+Development (CDL) deployments were manually initiated through Jenkins, allowing engineers to validate functionality before production promotion.
+
+---
+
+## Production Deployments
+
+Production deployments were automatically triggered through Git webhooks following approved code changes.
+
+---
+
+## Jenkins Pipeline
+
+Pipeline stages included:
+
+1. Source Checkout
+2. Build
+3. Validation
+4. Security Scanning
+5. Manual Approval
+6. Production Deployment
+
+---
+
+## Security Validation
+
+The pipeline integrated Snyk to perform dependency vulnerability scanning and enforce security policies before production releases.
+
+---
+
+## Deployment Targets
+
+Following approval, Jenkins deployed application updates to:
+
+* Red Hat Enterprise Linux production servers
+* Amazon EKS production cluster
+
+---
+
+## Infrastructure Management
+
+Terraform was used independently of the application deployment pipeline to manage AWS infrastructure through Infrastructure as Code.
+
+Terraform responsibilities included:
+
+* Infrastructure provisioning
+* AWS configuration management
+* Infrastructure consistency
+* Version-controlled infrastructure changes
+
+---
+
+# Engineering Challenges
+
+## Supporting Hybrid Infrastructure
+
+The application operated across both traditional RHEL servers and Amazon EKS while maintaining a consistent user experience. A corporate F5 BIG-IP load balancer distributed production traffic between both environments, enabling gradual cloud adoption without disrupting existing operational workflows.
+
+---
+
+## Reducing Manual Data Entry
+
+Instead of repeatedly entering static infrastructure information, engineers entered a Circuit ID and the application automatically retrieved circuit metadata from PostgreSQL. This reduced manual effort, improved consistency, and minimized human error during incident response.
+
+---
+
+## Standardizing Operational Communication
+
+The platform generated consistent notification formats and integrated with the Cisco Webex API to improve communication during infrastructure incidents while supporting updates throughout the incident lifecycle.
+
+---
+
+# Design Decisions
+
+## Why Terraform?
+
+Terraform managed AWS infrastructure using Infrastructure as Code, reducing manual configuration, minimizing configuration drift, and providing repeatable infrastructure management through version-controlled configuration.
+
+---
+
+## Why Kubernetes / Amazon EKS?
+
+Amazon EKS standardized deployment of containerized application workloads while providing orchestration, scalability, health management, and deployment consistency.
+
+---
+
+## Why Hybrid Deployment?
+
+The hybrid architecture enabled continued support for existing production workloads while incrementally adopting cloud-native technologies. Running both on-premises and AWS environments behind a corporate F5 load balancer reduced migration risk and increased operational flexibility.
+
+---
+
+## Why PostgreSQL?
+
+Separating reference data from transactional records simplified application logic and improved maintainability.
+
+Benefits included:
+
+* Automatic form population
+* Reduced manual entry
+* Consistent infrastructure metadata
+* Historical reporting
+* Operational auditing
+
+---
+
+# Technology Stack
+
+| Category           | Technologies             |
+| ------------------ | ------------------------ |
+| Backend            | Python, Flask            |
+| Web Server         | Apache, mod_wsgi         |
+| Container Platform | Kubernetes, Amazon EKS   |
+| Operating System   | Red Hat Enterprise Linux |
+| Database           | PostgreSQL               |
+| Infrastructure     | AWS, Terraform           |
+| CI/CD              | Jenkins                  |
+| DevSecOps          | Snyk                     |
+| Messaging          | Cisco Webex API          |
+| Networking         | F5 BIG-IP Load Balancer  |
+
+---
+
+# Results
+
+The platform significantly improved operational efficiency by automating manual infrastructure workflows.
+
+Key outcomes included:
+
+* Reduced manual data entry through metadata auto-population
+* Standardized incident communication
+* Faster notification delivery during outages
+* Improved operational visibility
+* Historical reporting and auditing
+* Hybrid production deployment across on-premises and AWS
+* Automated CI/CD with integrated security validation
+* Improved consistency across operational workflows
+
+---
+
+# Future Enhancements
+
+Potential future improvements include:
+
+* Role-based access control (RBAC)
+* Automated notification templates
+* Additional reporting dashboards
+* Expanded infrastructure integrations
+* Kubernetes-native deployment strategies
+* Enhanced operational analytics
