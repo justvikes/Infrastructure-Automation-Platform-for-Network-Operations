@@ -71,13 +71,13 @@ The platform supported multiple workflows depending on the engineer's operationa
 
 ## Create Notification Workflow
 
-![Create Notification Workflow](images/create-notification-workflow.png)
+![Create Notification Workflow](images/create_notification_workflow.png)
 
 ### Workflow
 
 1. Engineer accesses the internal Operations Portal.
 2. Engineer selects **Create Notification**.
-3. Circuit ID is entered.
+3. Circuit metadata entered and can be auto-completed.
 4. Flask queries PostgreSQL for circuit metadata.
 5. Static fields are automatically populated.
 6. Engineer enters incident-specific information.
@@ -89,7 +89,7 @@ The platform supported multiple workflows depending on the engineer's operationa
 
 ## Edit / Reply Notification Workflow
 
-![Edit Reply Workflow](images/edit-reply-workflow.png)
+![Edit Reply Workflow](images/edit_reply_notification_workflow.png)
 
 ### Workflow
 
@@ -108,7 +108,7 @@ Updated notification history was stored in PostgreSQL while Webex messages were 
 
 ## Circuit Metadata Management Workflow
 
-![Circuit Metadata Workflow](images/circuit-metadata-workflow.png)
+![Circuit Metadata Workflow](images/circuit_metadata_management_workflow.png)
 
 ### Workflow
 
@@ -127,7 +127,7 @@ Maintaining accurate metadata ensured notification forms remained automatically 
 
 # Runtime Architecture
 
-![Runtime Architecture](images/runtime-architecture.png)
+![Runtime Architecture](images/runtime_system_architecture.png)
 
 The production environment utilized a hybrid active-active deployment architecture.
 
@@ -225,7 +225,7 @@ Used for:
 
 # Delivery Architecture
 
-![Delivery Architecture](images/delivery-architecture.png)
+![Delivery Architecture](images/delivery_architecture.png)
 
 Application delivery followed a controlled DevSecOps workflow.
 
